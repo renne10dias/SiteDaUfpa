@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device=width, initial-scale=1.0">
+  <title>Curso</title>
+  <link rel="stylesheet" href="bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+  <div class="logo-wrapper d-flex align-items-center">
+    <h1>
+      <a href="index.html">
+        The News
+      </a>
+    </h1>
+  </div>
+</div>
+<div class="container-fluid menu">
+  <div class="container">
+    <div class="d-flex menu-items">
+      <div>
+        <a href="index.html">Home</a>
+      </div>
+      <div>
+        <a href="listarNoticiaTecnologia.html">Tecnologia</a>
+      </div>
+      <div>
+        <a href="listarNoticiaLazer.html">Lazer</a>
+      </div>
+      <div>
+        <a href="listarNoticiaEsporte.html">Esportes</a>
+      </div>
+      <div class="active">
+        <a href="listarNoticiaCurso.html">Cursos</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container section">
+    <div class="row">
+      <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+        <div class="mb-4 mt-4">
+          <div class="section-title">
+            <span>Outras Noticias</span>
+          </div>          
+            <div id="noticias"></div>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+<script>
+
+    // Função para buscar os dados da API e criar a vitrine
+    async function buscarDadosEAtualizarVitrine() {
+            const urlBuscarPorNome = "http://localhost:8080/blog.ufpa.br/noticia/buscaPorCategoria/4";
+            const detalheApiBusca = "http://localhost:8080/blog.ufpa.br/noticia/buscar/";
+            const detail = "detail.html";
+
+            console.log(urlBuscarPorNome);
+
+            try {
+                const response = await fetch(urlBuscarPorNome);
+                const data = await response.json();
+
+                // Verifica se a resposta da API é um array de objetos de produtos
+                if (Array.isArray(data)) {
+                    const produtos = data;
+
+                    // Código para criar a vitrine a partir dos dados obtidos
+                    const vitrineContainer = document.getElementById('noticias');
+                    vitrineContainer.innerHTML = ''; // Limpa o conteúdo anterior
+
+                    for (let produto of produtos) {
+
+                        // Adiciona o ID da notícia ao link de detalhes
+                        const produtoHTML = `
+                            <div class="row mb-3 bb-1 pt-0">
+                                <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
+                                    <img class="thumb" src="${produto.imagem}">
+                                </div>
+                                <div class="col-md-8 col-lg-8 col-sm-12 col-xs-12">
+                                    <h5>
+                                        <a class="font-large destaqueDetalheLink" href="#" data-id="${produto.id}">
+                                            <h6 class="titulo">${produto.titulo}</h6>
+                                        </a>
+                                    </h5>
+                                    <p class="summary pt-3">${produto.categorias[0].tipo}</p> 
+                                    <small>${produto.data}</small>
+                                    <p class="summary pt-3">${produto.descricao}</p>
+                                </div>
+                            </div>
+                        `;
+
+                        vitrineContainer.innerHTML += produtoHTML; // <p class="summary pt-3">${produto.categorias[0].tipo}</p> tipo = {"categoria": ["id": 3, "tipo": "tecnologia"]}
+                    }
+
+                    // Adiciona um manipulador de eventos aos links de detalhes
+                    const linksDetalhe = document.querySelectorAll('.destaqueDetalheLink');
+                    linksDetalhe.forEach(link => {
+                        link.addEventListener('click', e => {
+                            e.preventDefault();
+                            const noticiaId = link.dataset.id;
+
+                            // Construir o link da página de detalhes com os parâmetros
+                            const urlCompleta = detail + "?api=" + encodeURIComponent(detalheApiBusca) + "&id=" + encodeURIComponent(noticiaId);
+
+                            // Redirecionar para a URL completa
+                            window.location.href = urlCompleta;
+                        });
+                    });
+                } else {
+                    console.error('Resposta da API inválida.');
+                }
+            } catch (error) {
+                console.error('Erro ao buscar dados da API:', error);
+            }
+        }
+
+        buscarDadosEAtualizarVitrine();
+</script>
+</body>
+</html>

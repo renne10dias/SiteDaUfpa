@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Atualizar</title>
+    <meta charset="utf-8">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+
+  </head>
+ <body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="iuwcbbiuicbewbuuvuAdmininniuwbpvinuvwu.html">ADMIN</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="publicar.html">Publicar</a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="deletar.html">Excluir</a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="atualizar.html">Editar</a>
+              </li>
+              
+              
+            </ul>
+
+            <form class="d-flex">
+              <input class="form-control me-2" id="nomeBusca" type="search" placeholder="Search" aria-label="Search">
+              <button type="button" class="btn btn-primary" onclick="exibirNoticias()">Buscar</button>
+            </form>
+            
+          </div>
+        </div>
+      </nav>
+
+      <br/>
+
+      <div class="container section">
+        <div class="row">
+          <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+            <div class="mb-4 mt-4">
+              <div class="section-title">
+                <span>Atualizar Noticia</span>
+              </div>
+
+              <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">Titulo</span>
+                <input type="text" id="titulo" class="form-control" placeholder="" aria-label="Username" aria-describedby="basic-addon1">
+              </div>
+              
+              <div class="input-group mb-3">
+                <input type="text" id="descricao" class="form-control" placeholder="" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                <span class="input-group-text" id="basic-addon2">Descrição</span>
+              </div>
+              
+              
+              <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon3">Link da Imagem</span>
+                <input type="text" class="form-control" id="imagemLink" aria-describedby="basic-addon3">
+              </div>
+              
+              
+              <div class="input-group">
+                <span class="input-group-text">Texto</span>
+                <textarea class="form-control" id="texto" aria-label="With textarea"></textarea>
+              </div>
+        
+        
+              <div class="col-md-6">
+                <label for="categoria" class="form-label">Categoria</label>
+                <select id="categoria" class="form-select">
+                    <option selected></option>
+                    <option value="1">Lazer</option>
+                    <option value="2">Esporte</option>
+                    <option value="3">Tecnologia</option>
+                    <option value="4">Cursos</option>
+                </select>
+              </div>
+
+              <div class="col-md-2">
+                <label for="inputZip" class="form-label">Id da Noticia</label>
+                <input type="text" class="form-control" id="id">
+              </div>
+
+              
+              <br/>
+
+
+              <div class="col-12">
+                <button type="button" class="btn btn-primary" onclick="atualizarNoticia()">Atualizar</button>
+              </div>
+              
+            
+
+
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            <div class="trending mt-4">
+              <div class="section-title">
+                <span>Todas as Noticias</span>
+              </div>
+    
+              <div id="trendingDiv" class="row">
+                <!-- Os itens da lista serão adicionados dinamicamente aqui -->
+              </div>
+            </div>
+          </div>
+
+
+
+          
+        </div>
+      </div>
+      
+      </div>
+
+      
+
+            
+
+
+    <!-- Option 1: jquery Bundle with Popper -->
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <!-- Option 2: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+
+        function atualizarNoticia(){
+           
+
+            var titulo = $("#titulo").val();
+            var descricao = $("#descricao").val();
+            var imagem = $("#imagemLink").val();
+            var texto = $("#texto").val();
+
+            var noticiaid = parseInt($("#id").val());
+            var categoriaId = parseInt($("#categoria").val());
+
+            const url = `http://localhost:8080/blog.ufpa.br/noticia/atualizar/${noticiaid}?categoriaId=${categoriaId}`;
+
+
+
+
+
+
+
+            if(titulo == null || titulo != null && titulo.trim() == ''){
+                alert("Informe o Titulo");
+	            $("#title").focus();
+	            return;
+            }
+
+            if(descricao == null || descricao != null && descricao.trim() == ''){
+                alert("Informe a Descrição");
+	            $("#description").focus();
+	            return;
+            }
+
+            if(imagem == null || imagem != null && imagem.trim() == ''){
+                alert("Informe o link da imagem");
+	            $("#image").focus();
+	            return;
+            }
+
+            if(texto == null || texto != null && texto.trim() == ''){
+                alert("Informe o texto da sua publicação");
+	            $("#text").focus();
+	            return;
+            }
+
+            var categoria = document.getElementById('categoria').value;
+            if (categoria === '') {
+                alert("Selecione uma categoria de noticia");
+	            $("#categoria").focus();
+	            return;
+            }
+
+            var id = document.getElementById('id').value;
+            if (id === '') {
+                alert("Selecione um id de uma noticia");
+	            $("#id").focus();
+	            return;
+            }
+
+
+            $.ajax({
+                method: "PUT",
+                url: url,
+                data: JSON.stringify({
+                    titulo: titulo,
+                    descricao: descricao,
+                    imagem: imagem,
+                    texto: texto
+                }),
+                contentType: "application/json; charset=utf-8",
+                success: function (response){
+                    alert("Atualizado com Sucesso");
+                }
+            }).fail(function (xhr, status, errorThrown){
+                alert("Error ao Salvar: " + xhr.responseText);
+            });
+        }
+
+
+        
+
+
+
+        function exibirNoticias() {
+            const nomeBusca = document.getElementById('nomeBusca').value;
+            const urlBuscarPorNome = 'http://localhost:8080/blog.ufpa.br/noticia/buscarPorNome?nome=' + nomeBusca;
+
+            fetch(urlBuscarPorNome)
+                .then(response => response.json())
+                .then(data => {
+                const trendingDiv = document.getElementById('trendingDiv');
+                trendingDiv.innerHTML = '';
+
+                data.forEach(item => {
+                    const divRow = document.createElement('div');
+                    divRow.classList.add('row');
+
+                    const divColImg = document.createElement('div');
+                    divColImg.classList.add('col-md-4', 'col-lg-4', 'col-sm-12', 'col-xs-12');
+
+                    const img = document.createElement('img');
+                    img.classList.add('thumb');
+                    img.src = item.imagem;
+
+                    const divColContent = document.createElement('div');
+                    divColContent.classList.add('col-md-8', 'col-lg-8', 'col-sm-12', 'col-xs-12');
+
+                    const title = document.createElement('h5');
+                    const link = document.createElement('a');
+                    //link.href = item.link;
+                    link.textContent = item.titulo;
+                    title.appendChild(link);
+
+                    const category = document.createElement('p');
+                    category.textContent = 'Categoria: ' + item.categorias[0].tipo;
+
+                    const id = document.createElement('p');
+                    id.textContent = 'ID: ' + item.id;
+
+                    divColImg.appendChild(img);
+                    divColContent.appendChild(title);
+                    divColContent.appendChild(category);
+                    divColContent.appendChild(id);
+                    divRow.appendChild(divColImg);
+                    divRow.appendChild(divColContent);
+
+                    trendingDiv.appendChild(divRow);
+                });
+                })
+                .catch(error => {
+                console.log('Erro ao obter os dados da API:', error);
+                });
+            }
+
+            exibirNoticias();
+    </script>
+
+
+
+    
+
+    
+
+  </body>
+</html>
