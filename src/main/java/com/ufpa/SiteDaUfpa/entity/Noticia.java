@@ -7,9 +7,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-// spring.datasource.url=jdbc:mysql://localhost:3306/noticiasufpa
-
-
 @Entity
 @Table(name = "tb_noticia")
 public class Noticia {
