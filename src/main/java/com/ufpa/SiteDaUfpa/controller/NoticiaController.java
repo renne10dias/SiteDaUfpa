@@ -7,7 +7,9 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +17,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/noticia")
 public class NoticiaController {
+
 
     private final NoticiaService noticiaService;
     public NoticiaController(NoticiaService noticiaService) {
@@ -40,10 +43,15 @@ public class NoticiaController {
     @PostMapping("/postar")
     @ResponseBody
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    public ResponseEntity<Noticia> criarNoticia(@RequestBody Noticia noticia, @RequestParam("categoriaIds") List<Long> categoriaIds) {
-        Noticia novaNoticia = noticiaService.salvarNoticia(noticia, categoriaIds);
+    public ResponseEntity<Noticia> criarNoticia(
+            @ModelAttribute Noticia noticia,
+            @RequestParam("categoriaIds") List<Long> categoriaIds,
+            @RequestParam("file") MultipartFile arquivo) throws IOException {
+
+        Noticia novaNoticia = noticiaService.salvarNoticia(noticia, categoriaIds, arquivo);
         return ResponseEntity.ok(novaNoticia);
     }
+
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/buscarPorNome")

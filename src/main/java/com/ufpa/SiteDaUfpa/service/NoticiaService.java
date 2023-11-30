@@ -7,7 +7,12 @@ import com.ufpa.SiteDaUfpa.repository.CategoriaRepository;
 import com.ufpa.SiteDaUfpa.repository.NoticiaRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -15,6 +20,7 @@ import java.util.Optional;
 
 @Service
 public class NoticiaService {
+    private static String caminhoImagem = "src/main/resources/file/";
     private final NoticiaRepository noticiaRepository;
     private final CategoriaRepository categoriaRepository;
     public NoticiaService(NoticiaRepository noticiaRepository, CategoriaRepository categoriaRepository) {
@@ -22,12 +28,31 @@ public class NoticiaService {
         this.categoriaRepository = categoriaRepository;
     }
 
+
     @Transactional
-    public Noticia salvarNoticia(Noticia noticia, List<Long> categoriaIds) {
+    public Noticia salvarNoticia(Noticia noticia, List<Long> categoriaIds, MultipartFile arquivo) {
         List<Categoria> categorias = categoriaRepository.findAllById(categoriaIds);
         noticia.setCategorias(categorias);
+
+        try {
+            if (!arquivo.isEmpty()) {
+                byte[] bytes = arquivo.getBytes();
+                String nomeImagem = String.valueOf(noticia.getId()) + arquivo.getOriginalFilename();
+                Path caminho = Paths.get(caminhoImagem, nomeImagem);
+                Files.write(caminho, bytes);
+
+                noticia.setImagem(nomeImagem);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         return noticiaRepository.save(noticia);
     }
+
+
+
+
 
     // BUSCAR NOTICIA PELO ID DA NOTICIA E DA CATEGORIA
     @Transactional
